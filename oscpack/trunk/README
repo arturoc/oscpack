@@ -1,5 +1,7 @@
 oscpack -- Open Sound Control packet manipulation library
-Copyright (c) 2004 Ross Bencina <rossb@audiomulch.com>
+http://www.audiomulch.com/~rossb/code/oscpack
+
+Copyright (c) 2004-2005 Ross Bencina <rossb@audiomulch.com>
 
 A simple C++ library for packing and unpacking OSC packets.
 
@@ -24,6 +26,7 @@ Here's a summary of the key files:
 OscReceivedElements -- classes for parsing a packet
 OscPrintRecievedElements -- iostream << operators for printing packet elements
 OscOutboundPacket -- a class for packing messages into a packet
+OscPacketListener -- base class for listening to OSC packets on a UdpSocket
 OscUnitTests -- unit test program for the OSC modules
 OscDump -- a program that prints received OSC packets
 OscSendTests -- examples of how to send messages
@@ -42,5 +45,9 @@ Mac compatibility, and to Martin Kaltenbrunner and the rest of the
 reacTable team for giving me a reason to finish this library. Thanks
 to Merlijn Blaauw for reviewing the interface.
 
-Completed at the Music Technology Group, Audiovisual Institute,
-University Pompeu Fabra, Barcelona, November 2004.
+Portions developed at the Music Technology Group, Audiovisual Institute,
+University Pompeu Fabra, Barcelona, November 2004 - June 2005.
+
+See the file LICENSE for information about distributing and using this code.
+
+

@@ -135,7 +135,7 @@ void test1()
         try{
             int n = (i++)->AsInt32();
             (void)n;
-        }catch( Exception& e ){
+        }catch( Exception& ){
             exceptionThrown = true;
         }
         assertEqual( exceptionThrown, true );
@@ -230,7 +230,7 @@ void test2()
         bool exceptionThrown = false;
         try{
             TEST2_PRINT( "/a_char\0,x\0\0\0\0\0A" ); // unknown type tag 'x'
-        }catch( Exception& e ){
+        }catch( Exception& ){
             exceptionThrown = true;
         }
         assertEqual( exceptionThrown, true );

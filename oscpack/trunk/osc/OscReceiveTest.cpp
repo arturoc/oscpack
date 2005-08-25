@@ -27,36 +27,25 @@
 	CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 	WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-#include "OscReceiveTest.h"
-
 #include <string.h>
 #include <iostream>
 
 #include "OscReceivedElements.h"
 
-#include "NetworkingUtils.h"
-#include "UdpPacketListenerPort.h"
+#include "UdpSocket.h"
+#include "OscPacketListener.h"
 
 
 namespace osc{
 
-class OscReceiveTestPacketListener : public UdpPacketListener{
-    void ProcessBundle( const osc::ReceivedBundle& b )
-    {
-        // ignore bundle time tag for this test
+class OscReceiveTestPacketListener : public OscPacketListener{
+protected:
 
-        for( ReceivedBundle::const_iterator i = b.ElementsBegin(); i != b.ElementsEnd(); ++i ){
-            if( i->IsBundle() )
-                ProcessBundle( ReceivedBundle(*i) );
-            else
-                ProcessMessage( ReceivedMessage(*i) );
-        }
-    }
-
-    void ProcessMessage( const osc::ReceivedMessage& m )
+    void ProcessMessage( const osc::ReceivedMessage& m, const IpEndpointName& remoteEndpoint )
     {
         // a more complex scheme involving std::map or some other method of
-        // processing address patterns could be used here. however, the main
+        // processing address patterns could be used here 
+		// (see MessageMappingOscPacketListener.h for example). however, the main
         // purpose of this example is to illustrate and test different argument
         // parsing methods
 
@@ -226,37 +215,11 @@ class OscReceiveTestPacketListener : public UdpPacketListener{
             std::cout << "error while parsing message: "
                         << m.AddressPattern() << ": " << e.what() << "\n";
         }
-    }
-
-public:
-    virtual void ProcessPacket( const char *data, unsigned long size )
-    {
-        osc::ReceivedPacket p( data, size );
-        if( p.IsBundle() )
-            ProcessBundle( ReceivedBundle(p) );
-        else
-            ProcessMessage( ReceivedMessage(p) );
-    }
+    }    
 };
-
-
-static UdpPacketListenerPort *listenerPort_;
-OscReceiveTestPacketListener listener_;
-
-void StartReceiveTest( int port )
-{
-    listenerPort_ = new UdpPacketListenerPort( port, &listener_ );
-}
-
-
-void EndReceiveTest()
-{
-    delete listenerPort_;
-}
 
 } // namespace osc
 
-#ifndef NO_OSC_TEST_MAIN
 
 int main(int argc, char* argv[])
 {
@@ -265,26 +228,23 @@ int main(int argc, char* argv[])
         return 0;
     }
 
-    InitializeNetworking();
+	int port = 7000;
 
-    int port = 7000;
+	if( argc >= 2 )
+		port = atoi( argv[1] );
 
-    if( argc >= 2 )
-        port = atoi( argv[1] );
+	osc::OscReceiveTestPacketListener listener;
+	UdpReceiveSocket s( IpEndpointName( IpEndpointName::ANY_ADDRESS, port ) );
+	SocketReceiveMultiplexer mux;
+	mux.AttachSocketListener( &s, &listener );
 
-    osc::StartReceiveTest( port );
-    std::cout << "listening for input on port " << port << "...\n";
+	std::cout << "listening for input on port " << port << "...\n";
+	std::cout << "press ctrl-c to end\n";
 
-    std::cout << "press any key + return to end\n";
-    char c;
-    std::cin >> c;
+	mux.RunUntilSigInt();
 
-    osc::EndReceiveTest();
+	std::cout << "finishing.\n";
 
-    TerminateNetworking();
-    
     return 0;
 }
-
-#endif /* NO_OSC_TEST_MAIN */
 

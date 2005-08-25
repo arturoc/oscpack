@@ -417,7 +417,7 @@ public:
 
 	const char *AddressPattern() const { return addressPattern_; }
 
-	unsigned long ArgumentCount() const { return typeTagsEnd_ - typeTagsBegin_; }
+	unsigned long ArgumentCount() const { return static_cast<unsigned long>(typeTagsEnd_ - typeTagsBegin_); }
 
     const char *TypeTags() const { return typeTagsBegin_; }
 

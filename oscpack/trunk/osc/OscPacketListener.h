@@ -27,24 +27,49 @@
 	CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 	WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-#ifndef INCLUDED_UDPPACKETLISTENERPORT_H
-#define INCLUDED_UDPPACKETLISTENERPORT_H
+#ifndef INCLUDED_OSCPACKETLISTENER_H
+#define INCLUDED_OSCPACKETLISTENER_H
+
+#include "OscReceivedElements.h"
+#include "PacketListener.h"
 
 
-class UdpPacketListener{
+namespace osc{
+
+class OscPacketListener : public PacketListener{
+    void ProcessBundle( const osc::ReceivedBundle& b, 
+				const IpEndpointName& remoteEndpoint )
+    {
+        // ignore bundle time tag for now
+
+        for( ReceivedBundle::const_iterator i = b.ElementsBegin(); 
+				i != b.ElementsEnd(); ++i ){
+            if( i->IsBundle() )
+                ProcessBundle( ReceivedBundle(*i), remoteEndpoint );
+            else
+                ProcessMessage( ReceivedMessage(*i), remoteEndpoint );
+        }
+    }
+
+    unsigned long sourceAddress_;
+    int sourcePort_;
+    
+protected:
+    virtual void ProcessMessage( const osc::ReceivedMessage& m, 
+				const IpEndpointName& remoteEndpoint ) = 0;
+    
 public:
-    virtual ~UdpPacketListener() {}
-    virtual void ProcessPacket( const char *data, unsigned long size ) = 0;
+	virtual void PacketReceived( const char *data, int size, 
+			const IpEndpointName& remoteEndpoint )
+    {
+        osc::ReceivedPacket p( data, size );
+        if( p.IsBundle() )
+            ProcessBundle( ReceivedBundle(p), remoteEndpoint );
+        else
+            ProcessMessage( ReceivedMessage(p), remoteEndpoint );
+    }
 };
 
-class UdpPacketListenerPort{
-    class Implementation;
-    Implementation *impl_;
+} // namespace osc
 
-public:
-    UdpPacketListenerPort( int portNumber, UdpPacketListener *listener );
-    ~UdpPacketListenerPort();
-};
-
-
-#endif /* INCLUDED_UDPPACKETLISTENERPORT_H */
+#endif /* INCLUDED_OSCPACKETLISTENER_H */

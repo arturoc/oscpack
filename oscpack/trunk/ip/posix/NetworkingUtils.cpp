@@ -28,19 +28,18 @@
 	WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 #include "NetworkingUtils.h"
+
 #include <netdb.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <string.h>
-
-void InitializeNetworking()
-{
-}
+#include <stdio.h>
 
 
-void TerminateNetworking()
-{	
-}
+
+NetworkInitializer::NetworkInitializer() {}
+
+NetworkInitializer::~NetworkInitializer() {}
 
 
 unsigned long GetHostByName( const char *name )
@@ -51,9 +50,8 @@ unsigned long GetHostByName( const char *name )
     if( h ){
         struct in_addr a;
         memcpy( &a, h->h_addr_list[0], h->h_length );
-        result = a.s_addr;
+        result = ntohl(a.s_addr);
     }
 
     return result;
 }
-

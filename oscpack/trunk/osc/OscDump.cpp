@@ -40,19 +40,18 @@
 #include "OscReceivedElements.h"
 #include "OscPrintReceivedElements.h"
 
-#include "NetworkingUtils.h"
-#include "UdpPacketListenerPort.h"
+#include "UdpSocket.h"
+#include "PacketListener.h"
 
 
-class OscPacketListener : public UdpPacketListener{
+class OscDumpPacketListener : public PacketListener{
 public:
-    virtual void ProcessPacket( const char *data, unsigned long size )
-    {
-        osc::ReceivedPacket p( data, size );
-        std::cout << p;
-    }
+	virtual void PacketReceived( const char *data, int size, 
+			const IpEndpointName& remoteEndpoint )
+	{
+		std::cout << osc::ReceivedPacket( data, size );
+	}
 };
-
 
 int main(int argc, char* argv[])
 {
@@ -61,26 +60,23 @@ int main(int argc, char* argv[])
         return 0;
     }
 
-    InitializeNetworking();
+	int port = 7000;
 
-    int port = 7000;
+	if( argc >= 2 )
+		port = atoi( argv[1] );
 
-    if( argc >= 2 )
-        port = atoi( argv[1] );
+	OscDumpPacketListener listener;
+	UdpReceiveSocket s( IpEndpointName( IpEndpointName::ANY_ADDRESS, port ) );
+	SocketReceiveMultiplexer mux;
+	mux.AttachSocketListener( &s, &listener );
 
-    OscPacketListener listener;
-    UdpPacketListenerPort *listenerPort = new UdpPacketListenerPort( port, &listener );
+	std::cout << "listening for input on port " << port << "...\n";
+	std::cout << "press ctrl-c to end\n";
 
-    std::cout << "listening for input on port " << port << "...\n";
+	mux.RunUntilSigInt();
 
-    std::cout << "press any key + return to end\n";
-    char c;
-    std::cin >> c;
+	std::cout << "finishing.\n";	
 
-    delete listenerPort;
-
-    TerminateNetworking();
-    
     return 0;
 }
 

@@ -34,73 +34,67 @@
 
 #include "OscOutboundPacketStream.h"
 
-#include "NetworkingUtils.h"
-#include "UdpTransmitPort.h"
+#include "UdpSocket.h"
+#include "IpEndpointName.h"
 
 #define IP_MTU_SIZE 1536
 
 namespace osc{
     
-void RunSendTests( unsigned long address, int port )
+void RunSendTests( const IpEndpointName& host )
 {
-    InitializeNetworking();
-
     char buffer[IP_MTU_SIZE];
-
-    UdpTransmitPort *transmitPort = new UdpTransmitPort( address, port );
-
-            
     osc::OutboundPacketStream p( buffer, IP_MTU_SIZE );
-
+	UdpTransmitSocket socket( host );
 
     p.Clear();
     p << osc::BeginMessage( "/test1" )
             << true << 23 << (float)3.1415 << "hello" << osc::EndMessage;
-    transmitPort->Send( p.Data(), p.Size() );
+    socket.Send( p.Data(), p.Size() );
 
     // test1 message with too few arguments
     p.Clear();
     p << osc::BeginMessage( "/test1" )
             << true << osc::EndMessage;
-    transmitPort->Send( p.Data(), p.Size() );
+    socket.Send( p.Data(), p.Size() );
 
     // test1 message with too many arguments
     p.Clear();
     p << osc::BeginMessage( "/test1" )
             << true << 23 << (float)3.1415 << "hello" << 42 << osc::EndMessage;
-    transmitPort->Send( p.Data(), p.Size() );
+    socket.Send( p.Data(), p.Size() );
 
     // test1 message with wrong argument type
     p.Clear();
     p << osc::BeginMessage( "/test1" )
             << true << 1.0 << (float)3.1415 << "hello" << osc::EndMessage;
-    transmitPort->Send( p.Data(), p.Size() );
+    socket.Send( p.Data(), p.Size() );
 
     p.Clear();
     p << osc::BeginMessage( "/test2" )
             << true << 23 << (float)3.1415 << "hello" << osc::EndMessage;
-    transmitPort->Send( p.Data(), p.Size() );
+    socket.Send( p.Data(), p.Size() );
 
     // send four /test3 messages, each with a different type of argument
     p.Clear();
     p << osc::BeginMessage( "/test3" )
             << true << osc::EndMessage;
-    transmitPort->Send( p.Data(), p.Size() );
+    socket.Send( p.Data(), p.Size() );
 
     p.Clear();
     p << osc::BeginMessage( "/test3" )
             << 23 << osc::EndMessage;
-    transmitPort->Send( p.Data(), p.Size() );
+    socket.Send( p.Data(), p.Size() );
 
     p.Clear();
     p << osc::BeginMessage( "/test3" )
             << (float)3.1415 << osc::EndMessage;
-    transmitPort->Send( p.Data(), p.Size() );
+    socket.Send( p.Data(), p.Size() );
 
     p.Clear();
     p << osc::BeginMessage( "/test3" )
            << "hello" << osc::EndMessage;
-    transmitPort->Send( p.Data(), p.Size() );
+    socket.Send( p.Data(), p.Size() );
     
 
     // send a bundle
@@ -164,7 +158,7 @@ void RunSendTests( unsigned long address, int port )
         }
 
     p << osc::EndBundle;
-    transmitPort->Send( p.Data(), p.Size() );
+    socket.Send( p.Data(), p.Size() );
 
 
 
@@ -181,11 +175,7 @@ void RunSendTests( unsigned long address, int port )
         << osc::EndBundle
     << osc::EndBundle;
 
-    transmitPort->Send( p.Data(), p.Size() );
-
-    delete transmitPort;
-
-    TerminateNetworking();
+    socket.Send( p.Data(), p.Size() );
 }
 
 } // namespace osc
@@ -199,8 +189,6 @@ int main(int argc, char* argv[])
         return 0;
     }
 
-    InitializeNetworking();
-
     char *hostName = "localhost";
     int port = 7000;
     
@@ -210,18 +198,16 @@ int main(int argc, char* argv[])
     if( argc >= 3 )
         port = atoi( argv[2] );
 
-    unsigned long hostAddress = GetHostByName( hostName );
 
-    std::cout << "sending test messages to " << hostName << " ("
-        << (hostAddress & 0xFF) << '.'
-        << ((hostAddress>>8) & 0xFF) << '.'
-        << ((hostAddress>>16) & 0xFF) << '.'
-        << ((hostAddress>>24) & 0xFF)
-        << ") on port " << port << "...\n";
+	IpEndpointName host( hostName, port );
 
-    osc::RunSendTests( hostAddress, port );
+	char hostIpAddress[ IpEndpointName::ADDRESS_STRING_LENGTH ];
+	host.AddressAsString( hostIpAddress );
 
-    TerminateNetworking();
+    std::cout << "sending test messages to " << hostName 
+		<< " (" << hostIpAddress << ") on port " << port << "...\n";
+
+    osc::RunSendTests( host );
 }
 
 #endif /* NO_OSC_TEST_MAIN */

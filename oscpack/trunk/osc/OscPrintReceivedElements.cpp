@@ -115,7 +115,7 @@ std::ostream& operator<<( std::ostream & os,
 
                 // strip trailing newline from string returned by ctime
                 const char *timeString = std::ctime( &t );
-                int len = strlen( timeString );
+                size_t len = strlen( timeString );
                 char *s = new char[ len + 1 ];
                 strcpy( s, timeString );
                 if( len )

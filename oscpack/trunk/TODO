@@ -1,7 +1,18 @@
 TODO:
 
-    - fix UDPPacketListenerPort to close the thread correctly (this applies
-        to both the posix and Win32 versions.
+    - consider adding ListenerThread class to support old seperate thread listener functionality, something like:
+
+        class UdpSocketListenerThread{
+        public:
+            UdpSocketListenerThread( UdpSocket& socket, Listener *listener );
+            UdpSocketListenerThread( UdpSocketReceiveMultiplexer *mux );
+            ~UdpSocketListenerThread();
+
+            void Run();
+            void Stop();
+        };
+
+
 
     - provide some kind of automatic endianness configuration (hopefully there
         are gcc symbols for this)

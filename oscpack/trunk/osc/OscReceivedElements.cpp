@@ -42,7 +42,7 @@ namespace osc{
 // the string is terminated correctly.
 static inline const char* FindStr4End( const char *p )
 {
-    assert( ((int)p & 0x03L) == 0 );
+    assert( (reinterpret_cast<int>(p) & 0x03L) == 0 );
 
     p += 3;
 
@@ -57,8 +57,8 @@ static inline const char* FindStr4End( const char *p )
 // returns 0 if p == end or if the string is unterminated
 static inline const char* FindStr4End( const char *p, const char *end )
 {
-    assert( ((int)p & 0x03L) == 0 );
-    assert( ((int)end & 0x03L) == 0 );
+    assert( (reinterpret_cast<int>(p) & 0x03L) == 0 );
+    assert( (reinterpret_cast<int>(end) & 0x03L) == 0 );
 
     if( p >= end )
         return 0;
@@ -78,7 +78,7 @@ static inline const char* FindStr4End( const char *p, const char *end )
 
 static inline const char* RoundUp4( const char *p )
 {
-    return (const char*)((long)(p-1) & (~0x03L)) + 4;
+    return reinterpret_cast<const char*>(reinterpret_cast<long>(p-1) & (~0x03L)) + 4;
 }
 
 
