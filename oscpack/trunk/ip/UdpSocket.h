@@ -130,4 +130,29 @@ public:
 };
 
 
+// UdpListeningReceiveSocket provides a simple way to bind one listener
+// to a single socket without having to manually set up a SocketReceiveMultiplexer
+
+class UdpListeningReceiveSocket : public UdpSocket{
+    SocketReceiveMultiplexer mux_;
+    PacketListener *listener_;
+public:
+	UdpListeningReceiveSocket( const IpEndpointName& localEndpoint, PacketListener *listener )
+        : listener_( listener )
+    {
+        Bind( localEndpoint );
+        mux_.AttachSocketListener( this, listener_ );
+    }
+
+    ~UdpListeningReceiveSocket()
+        { mux_.DetachSocketListener( this, listener_ ); }
+
+    // see SocketReceiveMultiplexer above for the behaviour of these methods...
+    void Run() { mux_.Run(); }
+	void RunUntilSigInt() { mux_.RunUntilSigInt(); }
+    void Break() { mux_.Break(); }
+    void AsynchronousBreak() { mux_.AsynchronousBreak(); }
+};
+
+
 #endif /* INCLUDED_UDPSOCKET_H */
