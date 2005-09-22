@@ -396,7 +396,7 @@ public:
 
 					int size = i->second->ReceiveFrom( remoteEndpoint, data, MAX_BUFFER_SIZE );
 					if( size > 0 ){
-						i->first->PacketReceived( data, size, remoteEndpoint );
+						i->first->ProcessPacket( data, size, remoteEndpoint );
 						if( break_ )
 							break;
 					}
