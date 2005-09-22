@@ -1,41 +1,5 @@
-/*
-	oscpack -- Open Sound Control packet manipulation library
-	http://www.audiomulch.com/~rossb/oscpack
-
-	Copyright (c) 2004-2005 Ross Bencina <rossb@audiomulch.com>
-
-	Permission is hereby granted, free of charge, to any person obtaining
-	a copy of this software and associated documentation files
-	(the "Software"), to deal in the Software without restriction,
-	including without limitation the rights to use, copy, modify, merge,
-	publish, distribute, sublicense, and/or sell copies of the Software,
-	and to permit persons to whom the Software is furnished to do so,
-	subject to the following conditions:
-
-	The above copyright notice and this permission notice shall be
-	included in all copies or substantial portions of the Software.
-
-	Any person wishing to distribute modifications to the Software is
-	requested to send the modifications to the original developer so that
-	they can be incorporated into the canonical version.
-
-	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-	EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-	MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-	IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR
-	ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
-	CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-	WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-*/
 #include "UdpSocket.h"
 
-#ifdef WIN32
-#include <winsock2.h>   // this must come first to prevent errors with MSVC7
-#include <windows.h>
-#include <mmsystem.h> // for timeGetTime()
-
-typedef int socklen_t;
-#endif
 
 #include <vector>
 #include <algorithm>
@@ -46,7 +10,6 @@ typedef int socklen_t;
 #include <errno.h>
 #include <string.h> // for memset
 
-#ifndef WIN32
 #include <pthread.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -56,7 +19,6 @@ typedef int socklen_t;
 #include <sys/socket.h>
 #include <sys/time.h>
 #include <netinet/in.h> // for sockaddr_in
-#endif
 
 #include "PacketListener.h"
 #include "TimerListener.h"
@@ -123,11 +85,7 @@ public:
 
 	~Implementation()
 	{
-#ifdef WIN32
-		if (socket_ != -1) closesocket(socket_);
-#else
 		if (socket_ != -1) close(socket_);
-#endif
 	}
 
 	IpEndpointName LocalEndpointFor( const IpEndpointName& remoteEndpoint ) const
@@ -162,15 +120,6 @@ public:
 		}else{
 			// unconnect from the remote address
 		
-#ifdef WIN32
-			struct sockaddr_in unconnectSockAddr;
-			SockaddrFromIpEndpointName( unconnectSockAddr, IpEndpointName() );
-
-			if( connect(socket_, (struct sockaddr *)&unconnectSockAddr, sizeof(unconnectSockAddr)) < 0 
-					&& WSAGetLastError() != WSAEADDRNOTAVAIL ){
-				throw std::runtime_error("unable to un-connect udp socket\n");
-			}
-#else
 			struct sockaddr_in unconnectSockAddr;
 			memset( (char *)&unconnectSockAddr, 0, sizeof(unconnectSockAddr ) );
 			unconnectSockAddr.sin_family = AF_UNSPEC;
@@ -179,7 +128,6 @@ public:
 			if ( connectResult < 0 && errno != EAFNOSUPPORT ) {
 				throw std::runtime_error("unable to un-connect udp socket\n");
 			}
-#endif
 		}
 
 		return IpEndpointNameFromSockaddr( sockAddr );
@@ -312,8 +260,8 @@ static bool CompareScheduledTimerCalls(
 
 SocketReceiveMultiplexer *multiplexerInstanceToAbortWithSigInt_ = 0;
 
-extern "C" static void InterruptSignalHandler( int );
-static void InterruptSignalHandler( int )
+extern "C" /*static*/ void InterruptSignalHandler( int );
+/*static*/ void InterruptSignalHandler( int )
 {
 	multiplexerInstanceToAbortWithSigInt_->AsynchronousBreak();
 	signal( SIGINT, SIG_DFL );
@@ -455,7 +403,6 @@ public:
 				}
 			}
 
-
 			// execute any expired timers
 			currentTimeMs = GetCurrentTimeMs();
 			bool resort = false;
@@ -485,7 +432,8 @@ public:
 	{
 		break_ = true;
 		// FIXME: need to do something here to break through the select, not sure what
-		// for now single threaded apps will work fine because ct
+		// for now single threaded apps will work fine because ctrl-c will cause
+		// our select call to fall out with an E_INTR or something
 	}
 };
 
