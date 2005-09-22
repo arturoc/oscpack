@@ -46,7 +46,7 @@
 
 class OscDumpPacketListener : public PacketListener{
 public:
-	virtual void PacketReceived( const char *data, int size, 
+	virtual void ProcessPacket( const char *data, int size, 
 			const IpEndpointName& remoteEndpoint )
 	{
 		std::cout << osc::ReceivedPacket( data, size );

@@ -7,7 +7,7 @@ class IpEndpointName;
 class PacketListener{
 public:
     virtual ~PacketListener() {}
-    virtual void PacketReceived( const char *data, int size, 
+    virtual void ProcessPacket( const char *data, int size, 
 			const IpEndpointName& remoteEndpoint ) = 0;
 };
 

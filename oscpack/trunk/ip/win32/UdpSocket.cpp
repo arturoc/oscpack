@@ -378,7 +378,7 @@ public:
 				for( int i = waitResult - WAIT_OBJECT_0; i < (int)socketListeners_.size(); ++i ){
 					int size = socketListeners_[i].second->ReceiveFrom( remoteEndpoint, data, MAX_BUFFER_SIZE );
 					if( size > 0 ){
-						socketListeners_[i].first->PacketReceived( data, size, remoteEndpoint );
+						socketListeners_[i].first->ProcessPacket( data, size, remoteEndpoint );
 						if( break_ )
 							break;
 					}

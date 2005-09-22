@@ -59,7 +59,7 @@ protected:
 				const IpEndpointName& remoteEndpoint ) = 0;
     
 public:
-	virtual void PacketReceived( const char *data, int size, 
+	virtual void ProcessPacket( const char *data, int size, 
 			const IpEndpointName& remoteEndpoint )
     {
         osc::ReceivedPacket p( data, size );
