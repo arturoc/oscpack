@@ -385,7 +385,7 @@ void test3()
 }
 
 
-void RunTests()
+void RunUnitTests()
 {
     test1();
     test2();
@@ -403,7 +403,7 @@ int main(int argc, char* argv[])
     (void)argc;
     (void)argv;
     
-    osc::RunTests();
+    osc::RunUnitTests();
 }
 
 #endif

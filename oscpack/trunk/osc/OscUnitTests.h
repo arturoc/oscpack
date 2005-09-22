@@ -32,7 +32,7 @@
 
 namespace osc{
 
-void RunTests();
+void RunUnitTests();
 
 } // namespace osc
 
