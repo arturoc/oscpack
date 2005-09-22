@@ -66,14 +66,14 @@ int main(int argc, char* argv[])
 		port = atoi( argv[1] );
 
 	OscDumpPacketListener listener;
-	UdpReceiveSocket s( IpEndpointName( IpEndpointName::ANY_ADDRESS, port ) );
-	SocketReceiveMultiplexer mux;
-	mux.AttachSocketListener( &s, &listener );
+    UdpListeningReceiveSocket s(
+            IpEndpointName( IpEndpointName::ANY_ADDRESS, port ),
+            &listener );
 
 	std::cout << "listening for input on port " << port << "...\n";
 	std::cout << "press ctrl-c to end\n";
 
-	mux.RunUntilSigInt();
+	s.RunUntilSigInt();
 
 	std::cout << "finishing.\n";	
 

@@ -224,14 +224,14 @@ protected:
 void RunReceiveTest( int port )
 {
     osc::OscReceiveTestPacketListener listener;
-	UdpReceiveSocket s( IpEndpointName( IpEndpointName::ANY_ADDRESS, port ) );
-	SocketReceiveMultiplexer mux;
-	mux.AttachSocketListener( &s, &listener );
+	UdpListeningReceiveSocket s(
+            IpEndpointName( IpEndpointName::ANY_ADDRESS, port ),
+            &listener );
 
 	std::cout << "listening for input on port " << port << "...\n";
 	std::cout << "press ctrl-c to end\n";
 
-	mux.RunUntilSigInt();
+	s.RunUntilSigInt();
 
 	std::cout << "finishing.\n";
 }
@@ -258,3 +258,4 @@ int main(int argc, char* argv[])
 }
 
 #endif /* NO_OSC_TEST_MAIN */
+
