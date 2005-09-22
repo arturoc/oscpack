@@ -1,5 +1,7 @@
 TODO:
 
+    - consider adding the local endpoint name to PacketListener::PacketReceived() params
+
     - consider adding ListenerThread class to support old seperate thread listener functionality, something like:
 
         class UdpSocketListenerThread{
@@ -11,8 +13,6 @@ TODO:
             void Run();
             void Stop();
         };
-
-
 
     - provide some kind of automatic endianness configuration (hopefully there
         are gcc symbols for this)
@@ -48,3 +48,8 @@ TODO:
 
     - add a method to discard an inprogress message if it gets half
         constructed and the buffer is full in OutboundPacket
+
+    - write a stress testing app which can send garbage packets to try to flush out other bugs in the parsing code.
+
+
+
