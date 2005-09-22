@@ -361,11 +361,16 @@ public:
 		while( !break_ ){
 
 			double currentTimeMs = GetCurrentTimeMs();
-            double waitTime = timerQueue_.front().first - currentTimeMs;
-            if( waitTime < 0. )
-                waitTime = 0.;
-			DWORD waitResult = WaitForMultipleObjects( (DWORD)socketListeners_.size() + 1, &events[0], FALSE, 
-					timerQueue_.empty() ? INFINITE : (DWORD)waitTime );
+
+            DWORD waitTime = INFINITE;
+            if( !timerQueue_.empty() ){
+
+                waitTime = (DWORD)( timerQueue_.front().first >= currentTimeMs
+                            ? timerQueue_.front().first - currentTimeMs
+                            : 0 );
+            }
+
+			DWORD waitResult = WaitForMultipleObjects( (DWORD)socketListeners_.size() + 1, &events[0], FALSE, waitTime );
 			if( break_ )
 				break;
 
