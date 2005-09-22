@@ -27,6 +27,8 @@
 	CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 	WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
+#include "OscReceiveTest.h"
+
 #include <string.h>
 #include <iostream>
 
@@ -218,8 +220,25 @@ protected:
     }    
 };
 
+
+void RunReceiveTest( int port )
+{
+    osc::OscReceiveTestPacketListener listener;
+	UdpReceiveSocket s( IpEndpointName( IpEndpointName::ANY_ADDRESS, port ) );
+	SocketReceiveMultiplexer mux;
+	mux.AttachSocketListener( &s, &listener );
+
+	std::cout << "listening for input on port " << port << "...\n";
+	std::cout << "press ctrl-c to end\n";
+
+	mux.RunUntilSigInt();
+
+	std::cout << "finishing.\n";
+}
+
 } // namespace osc
 
+#ifndef NO_OSC_TEST_MAIN
 
 int main(int argc, char* argv[])
 {
@@ -233,18 +252,9 @@ int main(int argc, char* argv[])
 	if( argc >= 2 )
 		port = atoi( argv[1] );
 
-	osc::OscReceiveTestPacketListener listener;
-	UdpReceiveSocket s( IpEndpointName( IpEndpointName::ANY_ADDRESS, port ) );
-	SocketReceiveMultiplexer mux;
-	mux.AttachSocketListener( &s, &listener );
-
-	std::cout << "listening for input on port " << port << "...\n";
-	std::cout << "press ctrl-c to end\n";
-
-	mux.RunUntilSigInt();
-
-	std::cout << "finishing.\n";
+    osc::RunReceiveTest( port );
 
     return 0;
 }
 
+#endif /* NO_OSC_TEST_MAIN */
