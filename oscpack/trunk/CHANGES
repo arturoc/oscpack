@@ -62,4 +62,7 @@ the previous release.
     traversal automatically so you only need to process messages in 
     your derived classes.
     
+    - On Windows be sure to link with ws2_32.lib or you will see
+    a linker error about WSAEventSelect not being found. Also you 
+    will need to link with winmm.lib for timeGetTime()
 
