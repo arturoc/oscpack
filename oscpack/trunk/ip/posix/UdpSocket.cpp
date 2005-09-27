@@ -24,7 +24,7 @@
 #include "TimerListener.h"
 
 
-#if defined(__APPLE__) && !defined(_SOCKLEN_T_)
+#if defined(__APPLE__) && !defined(_SOCKLEN_T)
 // pre system 10.3 didn have socklen_t
 typedef ssize_t socklen_t;
 #endif
