@@ -24,8 +24,8 @@
 #include "TimerListener.h"
 
 
-// not sure why the following is missing on OSX
-#ifdef __APPLE__
+#if defined(__APPLE__) && !defined(_SOCKLEN_T_)
+// pre system 10.3 didn have socklen_t
 typedef ssize_t socklen_t;
 #endif
 
