@@ -31,7 +31,7 @@
 #define INCLUDED_OSCPACKETLISTENER_H
 
 #include "OscReceivedElements.h"
-#include "PacketListener.h"
+#include "ip/PacketListener.h"
 
 
 namespace osc{

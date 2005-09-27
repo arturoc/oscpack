@@ -32,10 +32,10 @@
 #include <iostream>
 #include <string.h>
 
-#include "OscOutboundPacketStream.h"
+#include "osc/OscOutboundPacketStream.h"
 
-#include "UdpSocket.h"
-#include "IpEndpointName.h"
+#include "ip/UdpSocket.h"
+#include "ip/IpEndpointName.h"
 
 #define IP_MTU_SIZE 1536
 

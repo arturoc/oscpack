@@ -10,19 +10,19 @@ DUMP=OscDump
 
 ENDIANESS=OSC_HOST_LITTLE_ENDIAN
 
-SENDSOURCES = ./osc/OscSendTests.cpp ./osc/OscOutboundPacketStream.cpp ./osc/OscTypes.cpp ./ip/posix/NetworkingUtils.cpp ./ip/posix/UdpSocket.cpp ./ip/IpEndpointName.cpp
+SENDSOURCES = ./tests/OscSendTests.cpp ./osc/OscOutboundPacketStream.cpp ./osc/OscTypes.cpp ./ip/posix/NetworkingUtils.cpp ./ip/posix/UdpSocket.cpp ./ip/IpEndpointName.cpp
 SENDOBJECTS = $(SENDSOURCES:.cpp=.o)
 
-RECEIVESOURCES = ./osc/OscReceiveTest.cpp ./osc/OscTypes.cpp ./osc/OscReceivedElements.cpp ./osc/OscPrintReceivedElements.cpp ./ip/posix/NetworkingUtils.cpp ./ip/posix/UdpSocket.cpp
+RECEIVESOURCES = ./tests/OscReceiveTest.cpp ./osc/OscTypes.cpp ./osc/OscReceivedElements.cpp ./osc/OscPrintReceivedElements.cpp ./ip/posix/NetworkingUtils.cpp ./ip/posix/UdpSocket.cpp
 RECEIVEOBJECTS = $(RECEIVESOURCES:.cpp=.o)
 
-DUMPSOURCES = ./osc/OscDump.cpp ./osc/OscTypes.cpp ./osc/OscReceivedElements.cpp ./osc/OscPrintReceivedElements.cpp ./ip/posix/NetworkingUtils.cpp ./ip/posix/UdpSocket.cpp
+DUMPSOURCES = ./examples/OscDump.cpp ./osc/OscTypes.cpp ./osc/OscReceivedElements.cpp ./osc/OscPrintReceivedElements.cpp ./ip/posix/NetworkingUtils.cpp ./ip/posix/UdpSocket.cpp
 DUMPOBJECTS = $(DUMPSOURCES:.cpp=.o)
 
-TESTSOURCES = ./osc/OscUnitTests.cpp ./osc/OscOutboundPacketStream.cpp ./osc/OscTypes.cpp ./osc/OscReceivedElements.cpp ./osc/OscPrintReceivedElements.cpp
+TESTSOURCES = ./tests/OscUnitTests.cpp ./osc/OscOutboundPacketStream.cpp ./osc/OscTypes.cpp ./osc/OscReceivedElements.cpp ./osc/OscPrintReceivedElements.cpp
 TESTOBJECTS = $(TESTSOURCES:.cpp=.o)
 
-INCLUDES = -I./ip -I./osc
+INCLUDES = -I./
 COPTS  = -Wall -O3
 CDEBUG = -Wall -g 
 CXXFLAGS = $(COPTS) $(INCLUDES) -D$(ENDIANESS)

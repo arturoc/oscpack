@@ -1,4 +1,4 @@
-#include "UdpSocket.h"
+#include "ip/UdpSocket.h"
 
 
 #include <vector>
@@ -20,8 +20,8 @@
 #include <sys/time.h>
 #include <netinet/in.h> // for sockaddr_in
 
-#include "PacketListener.h"
-#include "TimerListener.h"
+#include "ip/PacketListener.h"
+#include "ip/TimerListener.h"
 
 
 #if defined(__APPLE__) && !defined(_SOCKLEN_T)

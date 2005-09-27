@@ -32,10 +32,10 @@
 #include <string.h>
 #include <iostream>
 
-#include "OscReceivedElements.h"
+#include "osc/OscReceivedElements.h"
 
-#include "UdpSocket.h"
-#include "OscPacketListener.h"
+#include "ip/UdpSocket.h"
+#include "osc/OscPacketListener.h"
 
 
 namespace osc{

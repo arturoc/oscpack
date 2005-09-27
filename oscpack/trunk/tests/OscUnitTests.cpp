@@ -32,9 +32,9 @@
 #include <iostream>
 #include <iomanip>
 
-#include "OscReceivedElements.h"
-#include "OscPrintReceivedElements.h"
-#include "OscOutboundPacketStream.h"
+#include "osc/OscReceivedElements.h"
+#include "osc/OscPrintReceivedElements.h"
+#include "osc/OscOutboundPacketStream.h"
 
 
 namespace osc{

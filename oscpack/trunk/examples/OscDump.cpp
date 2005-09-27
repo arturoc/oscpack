@@ -37,11 +37,11 @@
 
 #include <iostream>
 
-#include "OscReceivedElements.h"
-#include "OscPrintReceivedElements.h"
+#include "osc/OscReceivedElements.h"
+#include "osc/OscPrintReceivedElements.h"
 
-#include "UdpSocket.h"
-#include "PacketListener.h"
+#include "ip/UdpSocket.h"
+#include "ip/PacketListener.h"
 
 
 class OscDumpPacketListener : public PacketListener{
