@@ -59,7 +59,7 @@ dump : $(DUMPOBJECTS)
 	$(CXX) -o bin/$(DUMP) $+ $(LIBS) 
 
 clean:
-	rm -rf bin $(TESTOBJECTS) $(SENDOBJECTS) $(RECEIVEOBJECTS) $(DUMPOBJECTS) $(LIBOBJECTS) $(LIBFILENAME) include lib oscpack &> /dev/null
+	rm -rf bin $(UNITTESTOBJECTS) $(SENDOBJECTS) $(RECEIVEOBJECTS) $(DUMPOBJECTS) $(LIBOBJECTS) $(LIBFILENAME) include lib oscpack &> /dev/null
 
 $(LIBFILENAME): $(LIBOBJECTS)
 	#GNU/Linux case
