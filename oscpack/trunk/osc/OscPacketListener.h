@@ -31,13 +31,14 @@
 #define INCLUDED_OSCPACKETLISTENER_H
 
 #include "OscReceivedElements.h"
-#include "ip/PacketListener.h"
+#include "../ip/PacketListener.h"
 
 
 namespace osc{
 
-class OscPacketListener : public PacketListener{
-    void ProcessBundle( const osc::ReceivedBundle& b, 
+class OscPacketListener : public PacketListener{ 
+protected:
+    virtual void ProcessBundle( const osc::ReceivedBundle& b, 
 				const IpEndpointName& remoteEndpoint )
     {
         // ignore bundle time tag for now
@@ -51,10 +52,6 @@ class OscPacketListener : public PacketListener{
         }
     }
 
-    unsigned long sourceAddress_;
-    int sourcePort_;
-    
-protected:
     virtual void ProcessMessage( const osc::ReceivedMessage& m, 
 				const IpEndpointName& remoteEndpoint ) = 0;
     
