@@ -481,10 +481,12 @@ void SocketReceiveMultiplexer::Run()
 
 void SocketReceiveMultiplexer::RunUntilSigInt()
 {
-	assert( multiplexerInstanceToAbortWithSigInt_ == 0 );
+	assert( multiplexerInstanceToAbortWithSigInt_ == 0 ); /* at present we support only one multiplexer instance running until sig int */
 	multiplexerInstanceToAbortWithSigInt_ = this;
 	signal( SIGINT, InterruptSignalHandler );
 	impl_->Run();
+	signal( SIGINT, SIG_DFL );
+	multiplexerInstanceToAbortWithSigInt_ = 0;
 }
 
 void SocketReceiveMultiplexer::Break()
