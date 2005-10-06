@@ -29,7 +29,6 @@
 */
 #include "ip/UdpSocket.h"
 
-
 #include <vector>
 #include <algorithm>
 #include <stdexcept>
