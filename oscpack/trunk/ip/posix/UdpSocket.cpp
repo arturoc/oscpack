@@ -301,6 +301,7 @@ class SocketReceiveMultiplexer::Implementation{
 	std::vector< AttachedTimerListener > timerListeners_;
 
 	volatile bool break_;
+	int breakPipe_[2]; // [0] is the reader descriptor and [1] the writer
 
 	double GetCurrentTimeMs() const
 	{
@@ -314,10 +315,14 @@ class SocketReceiveMultiplexer::Implementation{
 public:
     Implementation()
 	{
+		if( pipe(breakPipe_) != 0 )
+			throw std::runtime_error( "creation of asynchronous break pipes failed\n" );
 	}
 
     ~Implementation()
 	{
+		close( breakPipe_[0] );
+		close( breakPipe_[1] );
 	}
 
     void AttachSocketListener( UdpSocket *socket, PacketListener *listener )
@@ -369,7 +374,12 @@ public:
 		fd_set masterfds, tempfds;
 		FD_ZERO( &masterfds );
 		FD_ZERO( &tempfds );
-		int fdmax = 0;
+		
+		// in addition to listening to the inbound sockets we
+		// also listen to the asynchronous break pipe, so that AsynchronousBreak()
+		// can break us out of select() from another thread.
+		FD_SET( breakPipe_[0], &masterfds );
+		int fdmax = breakPipe_[0];		
 
 		for( std::vector< std::pair< PacketListener*, UdpSocket* > >::iterator i = socketListeners_.begin();
 				i != socketListeners_.end(); ++i ){
@@ -405,15 +415,22 @@ public:
 				if( timeoutMs < 0 )
 					timeoutMs = 0;
 			
-                // 1000000 microseconds in a second
-                timeout.tv_sec = (long)(timeoutMs * .001);
-                timeout.tv_usec = (long)((timeoutMs - (timeout.tv_sec * 1000)) * 1000);
+				// 1000000 microseconds in a second
+				timeout.tv_sec = (long)(timeoutMs * .001);
+				timeout.tv_usec = (long)((timeoutMs - (timeout.tv_sec * 1000)) * 1000);
 				timeoutPtr = &timeout;
 			}
 
 			if( select( fdmax + 1, &tempfds, 0, 0, timeoutPtr ) < 0 && errno != EINTR ){
    				throw std::runtime_error("select failed\n");
 			}
+
+			if ( FD_ISSET( breakPipe_[0], &tempfds ) ){
+				// clear pending data from the asynchronous break pipe
+				char c;
+				read( breakPipe_[0], &c, 1 );
+			}
+			
 			if( break_ )
 				break;
 
@@ -459,9 +476,9 @@ public:
     void AsynchronousBreak()
 	{
 		break_ = true;
-		// FIXME: need to do something here to break through the select, not sure what
-		// for now single threaded apps will work fine because ctrl-c will cause
-		// our select call to fall out with an E_INTR or something
+
+		// Send a termination message to the asynchronous break pipe, so select() will return
+		write( breakPipe_[1], "!", 1 );
 	}
 };
 
