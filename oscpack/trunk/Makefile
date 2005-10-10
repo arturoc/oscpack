@@ -85,7 +85,7 @@ install-local: lib
 	@echo ""
 	@echo " Installing in local directory <$(INCLUDEDIR)>"
 	@echo "   > Creating symbolic link"
-	@ln $(LIBFILENAME) $(LIBSONAME) -s
+	@ln -s $(LIBFILENAME) $(LIBSONAME)
 	@echo "   > Creating directories"
 	@mkdir -p oscpack/lib
 	@mkdir -p oscpack/include/ip
