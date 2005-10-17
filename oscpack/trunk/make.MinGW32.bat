@@ -10,6 +10,8 @@ g++ examples\OscDump.cpp osc\OscTypes.cpp osc\OscReceivedElements.cpp osc\OscPri
 
 g++ examples\SimpleSend.cpp osc\OscTypes.cpp osc\OscOutboundPacketStream.cpp ip\win32\NetworkingUtils.cpp ip\win32\UdpSocket.cpp ip\IpEndpointName.cpp -Wall -I.\ -lws2_32 -lwinmm -o bin\SimpleSend.exe
 
+g++ examples\SimpleReceive.cpp osc\OscTypes.cpp osc\OscReceivedElements.cpp ip\win32\NetworkingUtils.cpp ip\win32\UdpSocket.cpp -Wall -I.\ -lws2_32 -lwinmm -o bin\SimpleReceive.exe
+
 g++ tests\OscSendTests.cpp osc\OscTypes.cpp osc\OscOutboundPacketStream.cpp ip\win32\NetworkingUtils.cpp ip\win32\UdpSocket.cpp ip\IpEndpointName.cpp -Wall -I.\ -lws2_32 -lwinmm -o bin\OscSendTests.exe
 
 g++ tests\OscReceiveTest.cpp osc\OscTypes.cpp osc\OscReceivedElements.cpp ip\win32\NetworkingUtils.cpp ip\win32\UdpSocket.cpp -Wall -I.\ -lws2_32 -lwinmm -o bin\OscReceiveTest.exe
