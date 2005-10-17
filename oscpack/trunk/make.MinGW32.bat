@@ -8,6 +8,8 @@ g++ tests\OscUnitTests.cpp osc\OscTypes.cpp osc\OscReceivedElements.cpp osc\OscP
 
 g++ examples\OscDump.cpp osc\OscTypes.cpp osc\OscReceivedElements.cpp osc\OscPrintReceivedElements.cpp ip\win32\NetworkingUtils.cpp ip\win32\UdpSocket.cpp -Wall -I.\ -lws2_32 -lwinmm -o bin\OscDump.exe
 
+g++ examples\SimpleSend.cpp osc\OscTypes.cpp osc\OscOutboundPacketStream.cpp ip\win32\NetworkingUtils.cpp ip\win32\UdpSocket.cpp ip\IpEndpointName.cpp -Wall -I.\ -lws2_32 -lwinmm -o bin\SimpleSend.exe
+
 g++ tests\OscSendTests.cpp osc\OscTypes.cpp osc\OscOutboundPacketStream.cpp ip\win32\NetworkingUtils.cpp ip\win32\UdpSocket.cpp ip\IpEndpointName.cpp -Wall -I.\ -lws2_32 -lwinmm -o bin\OscSendTests.exe
 
 g++ tests\OscReceiveTest.cpp osc\OscTypes.cpp osc\OscReceivedElements.cpp ip\win32\NetworkingUtils.cpp ip\win32\UdpSocket.cpp -Wall -I.\ -lws2_32 -lwinmm -o bin\OscReceiveTest.exe
