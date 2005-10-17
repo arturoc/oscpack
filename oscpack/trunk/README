@@ -71,8 +71,9 @@ reacTable team for giving me a reason to finish this library. Thanks
 to Merlijn Blaauw for reviewing the interfaces. Thanks to Xavier Oliver
 for additional help with Linux builds and POSIX implementation details.
 
-Portions developed at the Music Technology Group, Audiovisual Institute,
-University Pompeu Fabra, Barcelona, November 2004 - September 2005.
+Portions developed at the Music Technology Group, Audiovisual Institute, 
+University Pompeu Fabra, Barcelona, during my stay as a visiting
+researcher, November 2004 - September 2005. 
 
 See the file LICENSE for information about distributing and using this code.
 
