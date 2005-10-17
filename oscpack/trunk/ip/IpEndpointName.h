@@ -32,7 +32,7 @@
 
 
 class IpEndpointName{
-	static unsigned long GetHostByName( const char *s );
+    static unsigned long GetHostByName( const char *s );
 public:
     static const unsigned long ANY_ADDRESS = 0xFFFFFFFF;
     static const int ANY_PORT = -1;
