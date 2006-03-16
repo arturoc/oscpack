@@ -51,8 +51,13 @@
 
 #elif defined(__APPLE__)
 
+#if defined(__LITTLE_ENDIAN__)
+#define OSC_HOST_LITTLE_ENDIAN 1
+#undef OSC_HOST_BIG_ENDIAN
+#else
 #define OSC_HOST_BIG_ENDIAN 1
 #undef OSC_HOST_LITTLE_ENDIAN
+#endif
 
 #else
 
