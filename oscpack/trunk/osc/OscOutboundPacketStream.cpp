@@ -337,9 +337,15 @@ OutboundPacketStream& OutboundPacketStream::operator<<( const BeginMessage& rhs 
     messageCursor_ = BeginElement( messageCursor_ );
 
     strcpy( messageCursor_, rhs.addressPattern );
-    messageCursor_ += strlen(rhs.addressPattern) + 1;
-    while( reinterpret_cast<int>(messageCursor_) & 0x03 )
+    unsigned long rhsLength = strlen(rhs.addressPattern);
+    messageCursor_ += rhsLength + 1;
+
+    // zero pad to 4-byte boundary
+    unsigned long i = rhsLength + 1;
+    while( i & 0x3 ){
         *messageCursor_++ = '\0';
+        ++i;
+    }
 
     argumentCurrent_ = messageCursor_;
     typeTagsCurrent_ = end_;
@@ -573,9 +579,15 @@ OutboundPacketStream& OutboundPacketStream::operator<<( const char *rhs )
 
     *(--typeTagsCurrent_) = STRING_TYPE_TAG;
     strcpy( argumentCurrent_, rhs );
-    argumentCurrent_ += strlen(rhs) + 1;
-    while( reinterpret_cast<int>(argumentCurrent_) & 0x03 )
+    unsigned long rhsLength = strlen(rhs);
+    argumentCurrent_ += rhsLength + 1;
+
+    // zero pad to 4-byte boundary
+    unsigned long i = rhsLength + 1;
+    while( i & 0x3 ){
         *argumentCurrent_++ = '\0';
+        ++i;
+    }
 
     return *this;
 }
@@ -587,9 +599,15 @@ OutboundPacketStream& OutboundPacketStream::operator<<( const Symbol& rhs )
 
     *(--typeTagsCurrent_) = SYMBOL_TYPE_TAG;
     strcpy( argumentCurrent_, rhs );
-    argumentCurrent_ += strlen(rhs) + 1;
-    while( reinterpret_cast<int>(argumentCurrent_) & 0x03 )
+    unsigned long rhsLength = strlen(rhs);
+    argumentCurrent_ += rhsLength + 1;
+
+    // zero pad to 4-byte boundary
+    unsigned long i = rhsLength + 1;
+    while( i & 0x3 ){
         *argumentCurrent_++ = '\0';
+        ++i;
+    }
 
     return *this;
 }
@@ -602,10 +620,16 @@ OutboundPacketStream& OutboundPacketStream::operator<<( const Blob& rhs )
     *(--typeTagsCurrent_) = BLOB_TYPE_TAG;
     FromUInt32( argumentCurrent_, rhs.size );
     argumentCurrent_ += 4;
+    
     memcpy( argumentCurrent_, rhs.data, rhs.size );
     argumentCurrent_ += rhs.size;
-    while( reinterpret_cast<int>(argumentCurrent_) & 0x03 )
+
+    // zero pad to 4-byte boundary
+    unsigned long i = rhs.size;
+    while( i & 0x3 ){
         *argumentCurrent_++ = '\0';
+        ++i;
+    }
 
     return *this;
 }

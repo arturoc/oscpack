@@ -47,8 +47,20 @@ typedef unsigned long long uint64;
 
 #endif
 
+
+
+#ifdef x86_64
+
+typedef signed int int32;
+typedef unsigned int uint32;
+
+#else
+
 typedef signed long int32;
 typedef unsigned long uint32;
+
+#endif
+
 
 
 enum TypeTagValues {

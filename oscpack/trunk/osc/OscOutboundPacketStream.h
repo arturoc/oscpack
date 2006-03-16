@@ -95,8 +95,12 @@ public:
     OutboundPacketStream& operator<<( const NilType& rhs );
     OutboundPacketStream& operator<<( const InfinitumType& rhs );
     OutboundPacketStream& operator<<( int32 rhs );
+
+#ifndef x86_64
     OutboundPacketStream& operator<<( int rhs )
             { *this << (int32)rhs; return *this; }
+#endif
+
     OutboundPacketStream& operator<<( float rhs );
     OutboundPacketStream& operator<<( char rhs );
     OutboundPacketStream& operator<<( const RgbaColor& rhs );

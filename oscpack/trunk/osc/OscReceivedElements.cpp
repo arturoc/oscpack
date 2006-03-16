@@ -42,8 +42,6 @@ namespace osc{
 // the string is terminated correctly.
 static inline const char* FindStr4End( const char *p )
 {
-    assert( (reinterpret_cast<int>(p) & 0x03L) == 0 );
-
     p += 3;
 
     while( *p )
@@ -57,16 +55,13 @@ static inline const char* FindStr4End( const char *p )
 // returns 0 if p == end or if the string is unterminated
 static inline const char* FindStr4End( const char *p, const char *end )
 {
-    assert( (reinterpret_cast<int>(p) & 0x03L) == 0 );
-    assert( (reinterpret_cast<int>(end) & 0x03L) == 0 );
-
     if( p >= end )
         return 0;
 
     p += 3;
     end -= 1;
 
-    while( p != end && *p )
+    while( p < end && *p )
         p += 4;
 
     if( *p )
@@ -76,9 +71,13 @@ static inline const char* FindStr4End( const char *p, const char *end )
 }
 
 
-static inline const char* RoundUp4( const char *p )
+static inline unsigned long RoundUp4( unsigned long x )
 {
-    return reinterpret_cast<const char*>(reinterpret_cast<long>(p-1) & (~0x03L)) + 4;
+    unsigned long remainder = x & 0x3UL;
+    if( remainder )
+        return x + (4 - remainder);
+    else
+        return x;
 }
 
 
@@ -475,14 +474,18 @@ void ReceivedMessageArgumentIterator::Advance()
 
         case STRING_TYPE_TAG: 
         case SYMBOL_TYPE_TAG:
-        
+
+            // we use the unsafe function FindStr4End(char*) here because all of
+            // the arguments have already been validated in
+            // ReceivedMessage::Init() below.
+            
             value_.argument_ = FindStr4End( value_.argument_ );
             break;
 
         case BLOB_TYPE_TAG:
             {
                 uint32 blobSize = ToUInt32( value_.argument_ );
-                value_.argument_ = RoundUp4( value_.argument_ + 4 + blobSize );
+                value_.argument_ = value_.argument_ + 4 + RoundUp4( blobSize );
             }
             break;
 
@@ -610,7 +613,7 @@ void ReceivedMessage::Init( const char *message, unsigned long size )
                                 MalformedMessageException( "arguments exceed message size" );
                                 
                             uint32 blobSize = ToUInt32( argument );
-                            argument = RoundUp4( argument + 4 + blobSize );
+                            argument = argument + 4 + RoundUp4( blobSize );
                             if( argument > end )
                                 MalformedMessageException( "arguments exceed message size" );
                         }
