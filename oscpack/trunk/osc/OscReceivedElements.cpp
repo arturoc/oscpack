@@ -42,6 +42,9 @@ namespace osc{
 // the string is terminated correctly.
 static inline const char* FindStr4End( const char *p )
 {
+	if( p[0] == '\0' )    // special case for SuperCollider integer address pattern
+		return p + 4;
+
     p += 3;
 
     while( *p )
@@ -57,6 +60,9 @@ static inline const char* FindStr4End( const char *p, const char *end )
 {
     if( p >= end )
         return 0;
+
+	if( p[0] == '\0' )    // special case for SuperCollider integer address pattern
+		return p + 4;
 
     p += 3;
     end -= 1;
@@ -515,6 +521,18 @@ ReceivedMessage::ReceivedMessage( const ReceivedBundleElement& bundleElement )
     : addressPattern_( bundleElement.Contents() )
 {
     Init( bundleElement.Contents(), bundleElement.Size() );
+}
+
+
+bool ReceivedMessage::AddressPatternIsUInt32() const
+{
+	return (addressPattern_[0] == '\0');
+}
+
+
+uint32 ReceivedMessage::AddressPatternAsUInt32() const
+{
+    return ToUInt32( addressPattern_ );
 }
 
 

@@ -418,8 +418,8 @@ public:
 	const char *AddressPattern() const { return addressPattern_; }
 
 	// Support for non-standad SuperCollider integer address patterns:
-	bool AddressPatternIsUInt32();
-	uint32 AddressPatternAsUInt32();
+	bool AddressPatternIsUInt32() const;
+	uint32 AddressPatternAsUInt32() const;
 
 	unsigned long ArgumentCount() const { return static_cast<unsigned long>(typeTagsEnd_ - typeTagsBegin_); }
 
