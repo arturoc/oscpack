@@ -22,7 +22,7 @@ DUMP=OscDump
 INCLUDEDIR = oscpack
 LIBNAME = liboscpack
 LIBSONAME = $(LIBNAME).so
-LIBFILENAME = $(LIBSONAME).1.0.1
+LIBFILENAME = $(LIBSONAME).1.0.2
 
 #Test and example source
 SENDSOURCES = ./tests/OscSendTests.cpp ./osc/OscOutboundPacketStream.cpp ./osc/OscTypes.cpp ./ip/posix/NetworkingUtils.cpp ./ip/posix/UdpSocket.cpp ./ip/IpEndpointName.cpp
