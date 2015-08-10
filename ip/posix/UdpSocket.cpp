@@ -61,6 +61,7 @@
 #include "ip/TimerListener.h"
 
 
+namespace osc{
 #if defined(__APPLE__) && !defined(_SOCKLEN_T)
 // pre system 10.3 didn't have socklen_t
 typedef ssize_t socklen_t;
@@ -600,3 +601,4 @@ void SocketReceiveMultiplexer::AsynchronousBreak()
 	impl_->AsynchronousBreak();
 }
 
+}

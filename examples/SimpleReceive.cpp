@@ -23,7 +23,7 @@ class ExamplePacketListener : public osc::OscPacketListener {
 protected:
 
     virtual void ProcessMessage( const osc::ReceivedMessage& m, 
-				const IpEndpointName& remoteEndpoint )
+				const osc::IpEndpointName& remoteEndpoint )
     {
         (void) remoteEndpoint; // suppress unused parameter warning
 
@@ -73,8 +73,8 @@ int main(int argc, char* argv[])
     (void) argv; // suppress unused parameter warnings
 
     ExamplePacketListener listener;
-    UdpListeningReceiveSocket s(
-            IpEndpointName( IpEndpointName::ANY_ADDRESS, PORT ),
+    osc::UdpListeningReceiveSocket s(
+    		osc::IpEndpointName( osc::IpEndpointName::ANY_ADDRESS, PORT ),
             &listener );
 
     std::cout << "press ctrl-c to end\n";

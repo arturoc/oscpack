@@ -43,6 +43,7 @@
 #include "IpEndpointName.h"
 
 
+namespace osc{
 class PacketListener;
 class TimerListener;
 
@@ -171,6 +172,6 @@ public:
     void Break() { mux_.Break(); }
     void AsynchronousBreak() { mux_.AsynchronousBreak(); }
 };
-
+}
 
 #endif /* INCLUDED_OSCPACK_UDPSOCKET_H */

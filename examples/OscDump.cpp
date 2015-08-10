@@ -59,10 +59,10 @@ using ::__strcmp__;  // avoid error: E2316 '__strcmp__' is not a member of 'std'
 #include "ip/PacketListener.h"
 
 
-class OscDumpPacketListener : public PacketListener{
+class OscDumpPacketListener : public osc::PacketListener{
 public:
 	virtual void ProcessPacket( const char *data, int size, 
-			const IpEndpointName& remoteEndpoint )
+			const osc::IpEndpointName& remoteEndpoint )
 	{
         (void) remoteEndpoint; // suppress unused parameter warning
 
@@ -83,8 +83,8 @@ int main(int argc, char* argv[])
 		port = std::atoi( argv[1] );
 
 	OscDumpPacketListener listener;
-    UdpListeningReceiveSocket s(
-            IpEndpointName( IpEndpointName::ANY_ADDRESS, port ),
+	osc::UdpListeningReceiveSocket s(
+			osc::IpEndpointName( osc::IpEndpointName::ANY_ADDRESS, port ),
             &listener );
 
 	std::cout << "listening for input on port " << port << "...\n";

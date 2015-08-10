@@ -16,7 +16,7 @@ int main(int argc, char* argv[])
     (void) argc; // suppress unused parameter warnings
     (void) argv; // suppress unused parameter warnings
 
-    UdpTransmitSocket transmitSocket( IpEndpointName( ADDRESS, PORT ) );
+    osc::UdpTransmitSocket transmitSocket( osc::IpEndpointName( ADDRESS, PORT ) );
     
     char buffer[OUTPUT_BUFFER_SIZE];
     osc::OutboundPacketStream p( buffer, OUTPUT_BUFFER_SIZE );

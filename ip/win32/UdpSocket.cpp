@@ -61,6 +61,7 @@
 typedef int socklen_t;
 
 
+namespace osc{
 static void SockaddrFromIpEndpointName( struct sockaddr_in& sockAddr, const IpEndpointName& endpoint )
 {
     std::memset( (char *)&sockAddr, 0, sizeof(sockAddr ) );
@@ -569,3 +570,4 @@ void SocketReceiveMultiplexer::AsynchronousBreak()
 	impl_->AsynchronousBreak();
 }
 
+}
