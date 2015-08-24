@@ -61,6 +61,12 @@ void RunSendTests( const IpEndpointName& host )
     osc::OutboundPacketStream p( buffer, IP_MTU_SIZE );
 	UdpTransmitSocket socket( host );
 
+    osc::IpEndpointName localEndpoint = socket.LocalEndpointForConnectedRemoteEndpoint();
+    osc::IpEndpointName localEndpoint2 = socket.LocalEndpointFor(host);
+    if (localEndpoint != localEndpoint2) {
+        std::cout << "error: local endpoints should have been the same for remote connection\n";
+    }
+
     p.Clear();
     p << osc::BeginMessage( "/test1" )
             << true << 23 << (float)3.1415 << "hello" << osc::EndMessage;
